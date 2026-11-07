@@ -167,7 +167,7 @@ th[scope=row]{white-space:nowrap;width:1%}
 
   <a class="np" id="np" href="#" target="_blank" rel="noopener" hidden>
           <img id="np-art" alt="" onerror="this.style.display='none'">
-          <span class="txt"><small id="np-label">last played</small><b id="np-song"></b><i id="np-artist"></i></span>
+          <span class="txt"><small id="np-label">last played</small><b id="np-song"></b><i id="np-artist"></i><span class="bar" id="np-bar" hidden><span id="np-fill"></span></span></span>
         </a>
 
   <a class="np" id="tv" href="#" target="_blank" rel="noopener" hidden>
@@ -264,6 +264,11 @@ th[scope=row]{white-space:nowrap;width:1%}
     fetch('https://api.lanyard.rest/v1/users/'+DISCORD_ID).then(function(r){return r.json()}).then(function(j){
       if(!j.success){offline();return}
       var d=j.data,s=d.discord_status||'offline';
+      /* exact song timing: a music app (Cider, Spotify...) showing on your Discord profile reports when the song started and ends */
+      var ma=(d.activities||[]).filter(function(x){return x.timestamps&&x.timestamps.start&&x.timestamps.end&&(x.type===0||x.type===2)&&/cider|apple music|spotify/i.test(x.name||'')})[0];
+      var mt=ma?ma.timestamps:(d.listening_to_spotify&&d.spotify&&d.spotify.timestamps);
+      rpcTimes=mt&&mt.start&&mt.end?[Number(mt.start),Number(mt.end)]:null;
+      if(rpcTimes)rpcSeen=true;
       bdot.className='dot big '+s;
       var act=(d.activities||[]).filter(function(x){return x.type===4})[0];
       var emojiSrc='',uni='',plain='',label=s==='dnd'?'do not disturb':s;
@@ -288,12 +293,46 @@ th[scope=row]{white-space:nowrap;width:1%}
   /* Last played (via Last.fm) */
   var LASTFM_USER='pissyrager';
   var LASTFM_KEY='d992dbc4011d375c6c12966bd0f00cc9';
+  /* Song progress bar. Last.fm doesn't report your playback position, so this is an estimate: the track length comes from Last.fm,
+     and the start time is guessed from when your previous song was scrobbled plus that song's length (falls back to when this page first saw the song). */
+  var rpcTimes=null,rpcSeen=false,npTimes=null,npBarEl=document.getElementById('np-bar'),npFill=document.getElementById('np-fill'),durCache={},seenAt={},npKey='';
+  function npTick(){
+    var now=Date.now(),tt=npTimes;
+    if(rpcTimes&&now>=rpcTimes[0]-5000&&now<=rpcTimes[1]+5000)tt=rpcTimes; /* exact, from Discord */
+    else if(rpcSeen)tt=null; /* Discord has shown your music app before, so no timing from it now means paused or stopped */
+    if(!tt){npBarEl.hidden=true;return}
+    var p=Math.max(0,Math.min(1,(now-tt[0])/(tt[1]-tt[0])));
+    npBarEl.hidden=false;npFill.style.width=(p*100)+'%';
+  }
+  setInterval(npTick,1000);
+  function trackDur(artist,name){
+    var k=(artist+'|'+name).toLowerCase();
+    if(durCache[k]!==undefined)return Promise.resolve(durCache[k]);
+    return fetch(lf('track.getinfo','&autocorrect=1&artist='+encodeURIComponent(artist)+'&track='+encodeURIComponent(name))).then(function(r){return r.json()}).then(function(j){
+      var d=Number(j&&j.track&&j.track.duration)||0;durCache[k]=d;return d;
+    }).catch(function(){return 0});
+  }
+  function npBar(t,prev,live){
+    var artist=(t.artist&&t.artist['#text'])||'',name=t.name||'',key=artist+'|'+name;
+    if(!live){npTimes=null;npKey='';npTick();return}
+    if(key!==npKey){npKey=key;seenAt[key]=Date.now()}
+    var pa=prev?((prev.artist&&prev.artist['#text'])||''):'',pn=prev?(prev.name||''):'';
+    Promise.all([trackDur(artist,name),prev?trackDur(pa,pn):Promise.resolve(0)]).then(function(d){
+      var dur=d[0],pd=d[1],now=Date.now(),start=seenAt[key]||now;
+      if(!dur){npTimes=null;npTick();return}
+      if(prev&&prev.date&&pd){
+        var guess=Number(prev.date.uts)*1000+pd;
+        if(guess<=now+5000&&now-guess<=dur+15000)start=guess;
+      }
+      npTimes=[start,start+dur];npTick();
+    });
+  }
   function lastfm(){
     if(LASTFM_KEY.indexOf('YOUR_')===0)return;
-    var url='https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&limit=1&format=json&user='+encodeURIComponent(LASTFM_USER)+'&api_key='+encodeURIComponent(LASTFM_KEY);
+    var url='https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&limit=2&format=json&user='+encodeURIComponent(LASTFM_USER)+'&api_key='+encodeURIComponent(LASTFM_KEY);
     fetch(url).then(function(r){return r.json()}).then(function(j){
-      var t=j.recenttracks&&j.recenttracks.track;
-      if(Array.isArray(t))t=t[0];
+      var list=j.recenttracks&&j.recenttracks.track,t=Array.isArray(list)?list[0]:list;
+      var prev=Array.isArray(list)&&list[1]&&!(list[1]['@attr']&&list[1]['@attr'].nowplaying)?list[1]:null;
       if(!t){np.hidden=true;return}
       var live=!!(t['@attr']&&t['@attr'].nowplaying==='true');
       document.getElementById('np-label').textContent=live?'now playing':'last played';
@@ -305,6 +344,7 @@ th[scope=row]{white-space:nowrap;width:1%}
       if(src)art.src=src;
       np.href=t.url||'#';
       np.hidden=false;
+      npBar(t,prev,live);
     }).catch(function(){np.hidden=true});
   }
   lastfm();
