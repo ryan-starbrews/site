@@ -78,7 +78,7 @@ a:focus-visible{outline:2px solid var(--green-2);outline-offset:2px;border-radiu
 .np{display:flex;gap:12px;align-items:center;width:100%;max-width:380px;padding:10px 12px;border:1px solid var(--line);border-radius:6px;background:var(--soft);color:var(--fg)!important;text-decoration:none!important;line-height:1.3;text-transform:lowercase}
 .np:hover{border-color:var(--green-2)}
 .np img{width:48px;height:48px;border-radius:6px;object-fit:cover;flex:none;background:var(--green-bg)}
-.np img.poster{width:36px;height:54px;border-radius:4px}
+.np img.poster{width:48px;height:48px;border-radius:6px;object-fit:cover;object-position:center 25%}
 .side .np+.np{margin-top:12px}
 .np .txt{min-width:0}
 .np small{display:block;font:600 .75rem var(--sans);color:var(--green)}
@@ -170,7 +170,7 @@ th[scope=row]{white-space:nowrap;width:1%}
 
   <a class="np" id="tv" href="#" target="_blank" rel="noopener" hidden>
           <img id="tv-art" class="poster" alt="" style="display:none" onerror="this.style.display='none'">
-          <span class="txt"><small id="tv-label">last watched</small><b id="tv-title"></b><i id="tv-sub"></i></span>
+          <span class="txt"><small id="tv-label">watching</small><b id="tv-title"></b><i id="tv-sub"></i></span>
         </a>
 </aside>
 </div>
@@ -318,7 +318,7 @@ th[scope=row]{white-space:nowrap;width:1%}
     if(!r){tv.hidden=true;return}
     var it=r.item,show=it.show,movie=it.movie,ep=it.episode,base=show||movie;
     if(!base){tv.hidden=true;return}
-    document.getElementById('tv-label').textContent=r.live?'now watching':'last watched';
+    document.getElementById('tv-label').textContent='watching';
     document.getElementById('tv-title').textContent=(base.title||'').toLowerCase();
     document.getElementById('tv-sub').textContent=ep?('s'+ep.season+' e'+ep.number+(ep.title?' · '+ep.title:'')).toLowerCase():(base.year?String(base.year):'');
     var slug=base.ids&&base.ids.slug;
