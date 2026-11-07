@@ -51,6 +51,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 
 
 .tags{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
+#fav-title[hidden],#fav-artists[hidden]{display:none}
 .tags li{font-family:var(--mono);font-size:.82rem;padding:7px 14px;border-radius:999px;background:rgba(27,121,107,.35);border:1px solid var(--accent)}
 .tags li.hl{background:var(--accent);border-color:var(--accent-hi);color:#fff}
 .tags li a{color:inherit;text-decoration:underline;text-underline-offset:3px}
@@ -180,8 +181,8 @@ html{scroll-behavior:smooth}
     <h2>lovezone</h2>
     <h3>people</h3>
     <ul class="tags"><li class="hl">freddie</li><li>nia</li><li>soda</li><li>bree</li><li>eva</li><li>ry</li><li>samuel</li><li>leia</li><li>scar</li><li>reese</li><li>aqua</li><li>derphinie</li><li>vincent</li><li>nico</li><li>fern</li><li>kenzie</li><li>jessie</li><li>thalia</li></ul>
-    <h3>favorite artists</h3>
-    <ul class="tags" id="fav-artists"><li>ravyn lenae</li><li>jackson marshall</li><li>adéla</li><li>presley regier</li><li>tate mcrae</li><li>sabrina carpenter</li><li>olivia rodrigo</li><li>ariana grande</li><li>role model</li><li>olivia dean</li></ul>
+    <h3 id="fav-title" hidden>favorite artists</h3>
+    <ul class="tags" id="fav-artists" hidden></ul>
   </section>
 
   <section class="panel" id="interests">
@@ -312,8 +313,8 @@ html{scroll-behavior:smooth}
   }
   window.addEventListener('resize',placeNp);window.addEventListener('load',placeNp);placeNp();
 
-  /* Favorite artists: pulled from your Last.fm top artists. The hand-written list in the HTML stays as the fallback
-     if Last.fm can't be reached, so the section is never empty. */
+  /* Favorite artists: pulled from your Last.fm top artists. The heading and list stay hidden until the data loads,
+     so nothing flashes on refresh (and the section stays hidden if Last.fm can't be reached). */
   var FAV_PERIOD='6month'; /* overall, 12month, 6month, 3month, 1month or 7day */
   var FAV_LIMIT=10;
   function favArtists(){
@@ -329,6 +330,7 @@ html{scroll-behavior:smooth}
         frag.appendChild(li);
       });
       ul.textContent='';ul.appendChild(frag);
+      ul.hidden=false;document.getElementById('fav-title').hidden=false;
     }).catch(function(){});
   }
   favArtists();
