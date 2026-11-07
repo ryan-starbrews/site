@@ -115,7 +115,7 @@ html{scroll-behavior:smooth}
 @media(max-width:860px){main{grid-template-columns:1fr}.sidecol{grid-column:1;grid-row:auto}.sidestick{position:static;max-height:none}.content{grid-column:1;grid-row:auto}}
 @media(max-width:560px){.two{grid-template-columns:1fr}.panel .links a{white-space:normal}}
 /* phones/tablets: keep the last.fm card pinned to the bottom of the screen */
-@media(max-width:860px){.np-sec{position:fixed;left:0;right:0;bottom:0;z-index:20;padding:12px 12px calc(env(safe-area-inset-bottom,0px) + 12px);background:var(--bg)}.np,.np:hover{background:#0a3d35}main{padding-bottom:130px}}
+@media(max-width:860px){.np-sec{position:fixed;left:12px;right:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);z-index:20}main{padding-bottom:120px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 
 </style>
