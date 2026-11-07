@@ -327,8 +327,10 @@ th[scope=row]{white-space:nowrap;width:1%}
     var tmdb=base.ids&&base.ids.tmdb,key=(show?'tv':'movie')+tmdb;
     if(TMDB_KEY&&tmdb&&key!==artFor){
       artFor=key;
-      fetch('https://api.themoviedb.org/3/'+(show?'tv/':'movie/')+tmdb+'?api_key='+encodeURIComponent(TMDB_KEY)).then(function(x){return x.json()}).then(function(d){
-        if(d&&d.poster_path){tvArt.src='https://image.tmdb.org/t/p/w154'+d.poster_path;tvArt.style.display=''}
+      fetch('https://api.themoviedb.org/3/'+(show?'tv/':'movie/')+tmdb+'?api_key='+encodeURIComponent(TMDB_KEY)+'&append_to_response=images&include_image_language=null').then(function(x){return x.json()}).then(function(d){
+        var bd=d&&d.images&&d.images.backdrops&&d.images.backdrops[0],pic=(bd&&bd.file_path)||(d&&d.backdrop_path);
+        if(pic){tvArt.style.objectPosition='center';tvArt.src='https://image.tmdb.org/t/p/w300'+pic;tvArt.style.display=''}
+        else if(d&&d.poster_path){tvArt.style.objectPosition='center top';tvArt.src='https://image.tmdb.org/t/p/w154'+d.poster_path;tvArt.style.display=''}
         else tvArt.style.display='none';
       }).catch(function(){tvArt.style.display='none'});
     }
