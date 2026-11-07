@@ -312,8 +312,8 @@ th[scope=row]{white-space:nowrap;width:1%}
      Needs your Trakt username (profile must be public) and a Trakt client ID. Posters are optional and need a free TMDB key. */
   var TRAKT_USER='slayyyter';
   var TRAKT_KEY='srm5cKymjlLTi4-Ddq7cVZWQmWN7UU8wqdDk7joP3Aw';
-  var TMDB_KEY='';   /* optional: leave empty for no poster */
-  var tv=document.getElementById('tv'),tvArt=document.getElementById('tv-art'),artFor='';
+  var TMDB_KEY='e5ba0d02cee97c9f27c426a38e2a8317';
+  var tv=document.getElementById('tv'),tvArt=document.getElementById('tv-art'),artFor='',lastLive=null;try{lastLive=JSON.parse(localStorage.getItem('tvLast')||'null')}catch(e){}
   function tvRender(r){
     if(!r){tv.hidden=true;return}
     var it=r.item,show=it.show,movie=it.movie,ep=it.episode,base=show||movie;
@@ -337,10 +337,22 @@ th[scope=row]{white-space:nowrap;width:1%}
     if(TRAKT_USER.indexOf('YOUR_')===0||TRAKT_KEY.indexOf('YOUR_')===0)return;
     var h={'Content-Type':'application/json','trakt-api-version':'2','trakt-api-key':TRAKT_KEY};
     var base='https://api.trakt.tv/users/'+encodeURIComponent(TRAKT_USER);
+    var ts=function(x){return x?(Date.parse(x.started_at||x.watched_at||'')||0):0};
     fetch(base+'/watching',{headers:h}).then(function(r){return r.status===200?r.json():null}).then(function(w){
-      if(w&&(w.movie||w.episode))return {live:true,item:w};
-      return fetch(base+'/history?limit=1',{headers:h}).then(function(r){return r.ok?r.json():[]}).then(function(a){return a&&a[0]?{live:false,item:a[0]}:null});
-    }).then(tvRender).catch(function(){tv.hidden=true});
+      if(w&&(w.movie||w.episode)){
+        lastLive=w;
+        try{localStorage.setItem('tvLast',JSON.stringify(w))}catch(e){}
+        return {live:true,item:w};
+      }
+      /* not playing: show whichever is newer, the last thing seen playing (even if paused) or the latest finished title in history */
+      return fetch(base+'/history?limit=1',{headers:h}).then(function(r){return r.ok?r.json():[]}).catch(function(){return []}).then(function(a){
+        var hi=a&&a[0]?a[0]:null;
+        if(lastLive&&(!hi||ts(lastLive)>ts(hi)))return {live:false,item:lastLive};
+        return hi?{live:false,item:hi}:null;
+      });
+    }).then(tvRender).catch(function(){
+      if(lastLive)tvRender({live:false,item:lastLive});else tv.hidden=true;
+    });
   }
   trakt();
   setInterval(trakt,60000);
