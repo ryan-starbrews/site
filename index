@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ryan's site</title>
+<style>
+:root{
+  --fg:#eef1e8; --muted:#b9c1ad; --line:#5e6857; --soft:#394033;
+  --green:#a7d98f; --green-2:#a7d98f; --green-bg:rgba(167,217,143,.16); --green-line:rgba(167,217,143,.42); --green-ink:#d2f0c3;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+  --bg:#42493d; --offline:#8c959f; --hover:#4d5646; --on-green:#1d2a16; --shadow:rgba(18,22,15,.6);
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth;scroll-padding-top:16px}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 var(--sans);-webkit-text-size-adjust:100%}
+a:focus-visible{outline:2px solid var(--green-2);outline-offset:2px;border-radius:3px}
+
+.page{max-width:1216px;margin:0 auto;padding:calc(32px + env(safe-area-inset-top,0px)) 16px calc(48px + env(safe-area-inset-bottom,0px));display:grid;grid-template-columns:296px minmax(0,1fr);gap:32px;align-items:start}
+.box{border:1px solid var(--line);border-radius:6px;background:var(--bg);overflow:hidden}
+.box-head{display:flex;align-items:center;gap:8px;padding:10px 16px;background:var(--soft);border-bottom:1px solid var(--line);font-size:.875rem;font-weight:600}
+.box-head>svg{fill:var(--muted);flex:none}
+
+/* ---------- markdown-ish content ---------- */
+.md{padding:32px 40px 40px}
+.md>*:first-child{margin-top:0}
+.md h1,.md h2{font-weight:600;line-height:1.25;padding-bottom:.3em;border-bottom:1px solid var(--line)}
+.md h1{font-size:2em;margin:0 0 20px}
+.md h2{font-size:1.5em;margin:32px 0 16px;position:relative}
+.md h3{font-size:1.25em;font-weight:600;line-height:1.25;margin:24px 0 12px}
+.md p{margin:0 0 16px}
+.md a{color:var(--green);text-decoration:none}
+.md a:hover{text-decoration:underline}
+.md ul{padding-left:2em;margin:0 0 16px}
+.md li+li{margin-top:.25em}
+.md ul.plain{list-style:none;padding:0}
+.anchor{position:absolute;left:-1.4em;top:0;width:1.2em;color:var(--muted)!important;font-weight:400;opacity:0;text-decoration:none!important}
+.md h2:hover .anchor,.anchor:focus-visible{opacity:1}
+.muted{color:var(--muted)}
+
+/* ---------- sidebar (GitHub profile style) ---------- */
+.sidecol{min-width:0}
+.side{font-size:16px}
+.avatar-wrap{position:relative}
+.avatar{width:100%;aspect-ratio:1;border-radius:50%;border:1px solid var(--line);overflow:hidden;background:var(--green-bg)}
+.avatar img{width:100%;height:100%;object-fit:cover;display:block}
+.avatar-badge{position:absolute;left:calc(100% - 40px);bottom:30px;z-index:5;display:flex;align-items:center;height:40px;min-width:40px;border-radius:20px;background:var(--bg);border:1px solid var(--line);color:var(--fg);outline:none;cursor:default;transition:box-shadow .2s}
+.avatar-badge:hover,.avatar-badge:focus{box-shadow:0 8px 24px var(--shadow)}
+.avatar-badge:focus-visible{outline:2px solid var(--green-2);outline-offset:2px}
+.b-icon{width:38px;height:38px;flex:none;display:flex;align-items:center;justify-content:center;font-size:18px;line-height:1}
+.b-icon .emoji{width:20px;height:20px}
+.b-text{max-width:0;opacity:0;padding:0;overflow:hidden;white-space:nowrap;font-size:14px;font-weight:500;line-height:20px;transition:max-width .22s ease,opacity .15s ease,padding .22s ease}
+.avatar-badge:hover .b-text,.avatar-badge:focus .b-text{max-width:min(520px,calc(100vw - 300px));opacity:1;padding:0 16px 0 4px}
+@media(prefers-reduced-motion:reduce){.avatar-badge,.b-text{transition:none}}
+.dot{--c:var(--green-2);width:8px;height:8px;flex:none;border-radius:50%;background:var(--c)}
+.dot.big{width:14px;height:14px}
+.dot.idle{--c:#bf8700}.dot.dnd{--c:#cf222e}.dot.offline{--c:var(--offline)}
+.names{padding:16px 0 0}
+.side h1{font-size:26px;font-weight:600;line-height:1.25;margin:0;padding:0;border:0}
+.username{margin:0;font-size:20px;font-weight:300;line-height:24px;color:var(--muted)}
+.username a{color:inherit;text-decoration:none;cursor:pointer}
+.username a:hover{color:inherit;text-decoration:none}
+.emoji{width:16px;height:16px;object-fit:contain;border-radius:3px}
+.side .bio{margin:16px 0 0;font-size:16px;line-height:1.5}
+.vcard{list-style:none;margin:16px 0 0;padding:0}
+.vcard li{display:flex;align-items:flex-start;gap:8px;margin:0 0 4px;line-height:24px;min-width:0}
+.vcard svg{flex:none;width:16px;height:16px;margin-top:4px;fill:none;stroke:var(--muted);stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+.vcard span,.vcard a{min-width:0;overflow-wrap:anywhere}
+.vcard a{color:var(--fg);text-decoration:none}
+.vcard a:hover{color:var(--green);text-decoration:underline}
+.side .np{max-width:none;margin-top:24px}
+
+/* now playing */
+.np{display:flex;gap:12px;align-items:center;width:100%;max-width:380px;padding:10px 12px;border:1px solid var(--line);border-radius:6px;background:var(--soft);color:var(--fg)!important;text-decoration:none!important;line-height:1.3;text-transform:lowercase}
+.np:hover{border-color:var(--green-2)}
+.np img{width:48px;height:48px;border-radius:6px;object-fit:cover;flex:none;background:var(--green-bg)}
+.np .txt{min-width:0}
+.np small{display:block;font:600 .75rem var(--sans);color:var(--green)}
+.np b,.np i{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.np b{font-weight:600}
+.np i{font-style:normal;font-size:.875rem;color:var(--muted)}
+
+/* ---------- tables ---------- */
+.tablewrap{overflow-x:auto;margin:0 0 16px}
+table{border-collapse:collapse;width:100%}
+th,td{padding:6px 13px;border:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-weight:600}
+tbody tr:nth-child(even){background:var(--soft)}
+th[scope=row]{white-space:nowrap;width:1%}
+.clock{display:inline-flex;align-items:center;gap:6px;margin-left:8px;padding:.15em .5em;border:1px solid var(--green-line);border-radius:6px;background:var(--green-bg);color:var(--green-ink);font:.85em var(--mono)}
+
+/* ---------- labels ---------- */
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 16px;padding:0!important;list-style:none}
+.tags li{margin:0!important;padding:.2em .55em;border:1px solid var(--green-line);border-radius:6px;background:var(--green-bg);color:var(--green-ink);font:.85rem/1.5 var(--mono)}
+.tags li.hl{background:var(--green);border-color:var(--green);color:var(--on-green)}
+.tags.dni li{background:var(--soft);border-color:var(--line);color:var(--fg)}
+
+/* ---------- layout bits ---------- */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:0 32px}
+.two h3{margin-top:0}
+.alert{margin:0 0 16px;padding:0 1em;border-left:.25em solid var(--green-2)}
+.alert-title{margin:0 0 4px!important;font-weight:600;color:var(--green)}
+.alert p:last-child{margin-bottom:0}
+
+@media(max-width:860px){
+  .page{grid-template-columns:1fr;gap:24px}
+  .avatar-wrap{max-width:260px}
+  .avatar-badge{left:auto;right:0;flex-direction:row-reverse}
+  .avatar-badge:hover .b-text,.avatar-badge:focus .b-text{max-width:210px;white-space:normal;padding:4px 4px 4px 14px}
+  .avatar-badge:hover,.avatar-badge:focus{min-height:40px;height:auto}
+}
+@media(max-width:700px){
+  .md{padding:20px 16px 28px}
+  .two{grid-template-columns:1fr}
+  .anchor{display:none}
+}
+</style>
+</head>
+<body>
+<div class="page">
+<div class="sidecol">
+<aside class="side">
+  <div class="avatar-wrap">
+    <div class="avatar">
+      <!-- Shows your Discord profile picture (via Lanyard). The silhouette is the fallback if it can't load. -->
+      <img id="avatar-img" alt="Profile picture" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23dafbe1'/%3E%3Ccircle cx='50' cy='38' r='17' fill='%231a7f37'/%3E%3Cpath d='M16 92c4-26 20-34 34-34s30 8 34 34Z' fill='%231a7f37'/%3E%3C/svg%3E">
+    </div>
+    <span class="avatar-badge" id="avatar-badge" tabindex="0"><span class="b-icon"><img id="badge-img" class="emoji" alt="" hidden><span id="badge-uni" hidden></span><span class="dot big offline" id="badge-dot"></span></span><span class="b-text" id="badge-text">offline</span></span>
+  </div>
+
+  <div class="names">
+    <h1>݁ ⟡ ryan ⊹</h1>
+    <p class="username"><a id="discord-name" href="https://discord.com/users/701517787776024647" target="_blank" rel="noopener">@username</a> · he/him</p>
+  </div>
+
+  <p class="bio">hi, i’m <b>ryan</b>! i love music, singing, collecting vinyl, and staying up way too late. this is my little rainy corner of the internet, so grab a seat and stay a while.</p>
+
+  <ul class="vcard">
+    <li><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span>december 2</span></li>
+    <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg><span>texas, united states</span></li>
+    <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg><span>english only</span></li>
+    <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span><span id="tz-time">--:--</span> <span class="muted">(<span id="tz-name">cst · gmt-6</span>)</span></span></li>
+  </ul>
+
+  <a class="np" id="np" href="#" target="_blank" rel="noopener" hidden>
+          <img id="np-art" alt="" onerror="this.style.display='none'">
+          <span class="txt"><small id="np-label">last played</small><b id="np-song"></b><i id="np-artist"></i></span>
+        </a>
+</aside>
+</div>
+
+<div class="box">
+  <div class="box-head">
+    <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M0 1.75A.75.75 0 0 1 .75 1h4.253c1.227 0 2.317.59 3 1.501A3.743 3.743 0 0 1 11.006 1h4.245a.75.75 0 0 1 .75.75v10.5a.75.75 0 0 1-.75.75h-4.507a2.25 2.25 0 0 0-1.591.659l-.622.621a.75.75 0 0 1-1.06 0l-.622-.621A2.25 2.25 0 0 0 5.258 13H.75a.75.75 0 0 1-.75-.75Zm7.251 10.324.004-5.073-.002-2.253A2.25 2.25 0 0 0 5.003 2.5H1.5v9h3.757a3.75 3.75 0 0 1 1.994.574ZM8.755 4.75l-.004 7.322a3.752 3.752 0 0 1 1.992-.572H14.5v-9h-3.495a2.25 2.25 0 0 0-2.25 2.25Z"/></svg>
+    <span>readme</span>
+  </div>
+  <article class="md">
+    <h2 id="likes"><a class="anchor" href="#likes" aria-label="link to this section">#</a>likes &amp; dislikes</h2>
+    <div class="two">
+      <div>
+        <h3>likes</h3>
+        <ul>
+          <li>my boyfriend</li><li>music</li><li>singing</li><li>talking to people</li><li>playing mc</li><li>collecting vinyl</li><li>making friends</li><li>playing roblox</li><li>calling</li><li>sleeping in</li><li>staying up late</li><li>stranger things</li><li>rain</li>
+        </ul>
+      </div>
+      <div>
+        <h3>dislikes</h3>
+        <ul>
+          <li>waking up early</li><li>slow walkers</li><li>shipping prices</li><li>people that are blocked</li><li>coffee</li><li>the heat</li><li>trump/ice/etc.</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 id="lovezone"><a class="anchor" href="#lovezone" aria-label="link to this section">#</a>lovezone</h2>
+    <h3>people</h3>
+    <ul class="tags"><li class="hl">freddie</li><li>nia</li><li>soda</li><li>bree</li><li>eva</li><li>ry</li><li>samuel</li><li>leia</li><li>scar</li><li>reese</li><li>aqua</li><li>derphinie</li><li>vincent</li><li>nico</li><li>fern</li><li>kenzie</li><li>jessie</li><li>thalia</li></ul>
+    <h3 id="fav-title" hidden>favorite artists</h3>
+    <ul class="tags" id="fav-artists" hidden></ul>
+    <h3 id="genre-title" hidden>favorite genres</h3>
+    <ul class="tags" id="fav-genres" hidden></ul>
+
+    <h2 id="before-you-interact"><a class="anchor" href="#before-you-interact" aria-label="link to this section">#</a>before you interact</h2>
+    <div class="alert">
+      <p class="alert-title">note</p>
+      <p>i’m a minor, so don’t be weird. i don’t add randoms, i have no problem blocking anyone, and i will block you if i feel the need to.</p>
+    </div>
+    <h3>dni</h3>
+    <ul class="tags dni"><li>t.r.a.s.h.</li><li>pedophiles</li><li>looking to troll</li><li>-13</li><li>maga</li><li>nsfw accounts</li><li>ice supporters</li><li>disrespectful people</li><li>fake friends</li></ul>
+
+    <h2 id="links"><a class="anchor" href="#links" aria-label="link to this section">#</a>links</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>platform</th><th>profile</th></tr></thead>
+        <tbody>
+          <tr><td>last.fm</td><td><a href="https://www.last.fm/user/pissyrager" target="_blank" rel="noopener">pissyrager</a></td></tr>
+          <tr><td>discord</td><td><a href="https://discord.com/users/701517787776024647" target="_blank" rel="noopener">say hi</a></td></tr>
+          <tr><td>tiktok</td><td><a href="https://www.tiktok.com/@tinashesdiary" target="_blank" rel="noopener">@tinashesdiary</a></td></tr>
+          <tr><td>apple music</td><td><a href="https://music.apple.com/profile/chihiroryan" target="_blank" rel="noopener">profile</a></td></tr>
+          <tr><td>twitter</td><td><a href="https://x.com/tinashesdiary" target="_blank" rel="noopener">@tinashesdiary</a></td></tr>
+          <tr><td>airbuds</td><td><a href="https://i.tunesimo.com/yourscarsaretalking/YBQqRFHAbo" target="_blank" rel="noopener">profile</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </article>
+</div>
+</div>
+
+<script>
+(function(){
+  /* Local time (Texas / Central) */
+  var TZ='America/Chicago';
+  var tzName=document.getElementById('tz-name'),tzTime=document.getElementById('tz-time');
+  function clock(){
+    try{
+      var now=new Date();
+      var part=function(opts){return new Intl.DateTimeFormat('en-US',Object.assign({timeZone:TZ},opts)).formatToParts(now).filter(function(p){return p.type==='timeZoneName'})[0].value};
+      tzName.textContent=(part({timeZoneName:'short'})+' · '+part({timeZoneName:'shortOffset'})).toLowerCase();
+      tzTime.textContent=now.toLocaleTimeString('en-US',{timeZone:TZ,hour:'numeric',minute:'2-digit'}).replace(/\u202f/g,' ').toLowerCase();
+    }catch(e){}
+  }
+  clock();
+  setInterval(clock,15000);
+
+  /* Discord presence (via Lanyard) */
+  var DISCORD_ID='701517787776024647';
+  var avatarImg=document.getElementById('avatar-img');
+  var bdot=document.getElementById('badge-dot'),bimg=document.getElementById('badge-img'),buni=document.getElementById('badge-uni'),btext=document.getElementById('badge-text'),np=document.getElementById('np');
+  function setBadge(uni,emojiSrc,txt,label){
+    btext.textContent=txt||label;
+    bimg.hidden=!emojiSrc;if(emojiSrc)bimg.src=emojiSrc;else bimg.removeAttribute('src');
+    buni.textContent=uni||'';buni.hidden=!uni||!!emojiSrc;
+    bdot.hidden=!!(emojiSrc||uni);
+  }
+  function offline(){bdot.className='dot big offline';setBadge('','','','offline')}
+  function presence(){
+    fetch('https://api.lanyard.rest/v1/users/'+DISCORD_ID).then(function(r){return r.json()}).then(function(j){
+      if(!j.success){offline();return}
+      var d=j.data,s=d.discord_status||'offline';
+      bdot.className='dot big '+s;
+      var act=(d.activities||[]).filter(function(x){return x.type===4})[0];
+      var emojiSrc='',uni='',plain='',label=s==='dnd'?'do not disturb':s;
+      if(act){
+        plain=(act.state||'').toLowerCase();
+        var e=act.emoji;
+        if(e&&e.id)emojiSrc='https://cdn.discordapp.com/emojis/'+e.id+'.'+(e.animated?'gif':'png')+'?size=48';
+        else if(e&&e.name)uni=e.name;
+      }
+      setBadge(uni,emojiSrc,plain,label);
+      var u=d.discord_user;
+      if(u&&u.username)document.getElementById('discord-name').textContent='@'+u.username; /* your Discord username; the text in the HTML is the fallback */
+      if(u&&u.avatar){
+        var ext=u.avatar.indexOf('a_')===0?'gif':'png';
+        avatarImg.src='https://cdn.discordapp.com/avatars/'+u.id+'/'+u.avatar+'.'+ext+'?size=1024';
+      }
+    }).catch(offline);
+  }
+  presence();
+  setInterval(presence,30000);
+
+  /* Last played (via Last.fm) */
+  var LASTFM_USER='pissyrager';
+  var LASTFM_KEY='d992dbc4011d375c6c12966bd0f00cc9';
+  function lastfm(){
+    if(LASTFM_KEY.indexOf('YOUR_')===0)return;
+    var url='https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&limit=1&format=json&user='+encodeURIComponent(LASTFM_USER)+'&api_key='+encodeURIComponent(LASTFM_KEY);
+    fetch(url).then(function(r){return r.json()}).then(function(j){
+      var t=j.recenttracks&&j.recenttracks.track;
+      if(Array.isArray(t))t=t[0];
+      if(!t){np.hidden=true;return}
+      var live=!!(t['@attr']&&t['@attr'].nowplaying==='true');
+      document.getElementById('np-label').textContent=live?'now playing':'last played';
+      document.getElementById('np-song').textContent=(t.name||'').toLowerCase();
+      document.getElementById('np-artist').textContent=((t.artist&&t.artist['#text'])||'').toLowerCase();
+      var imgs=t.image||[],src=imgs.length?imgs[imgs.length-1]['#text']:'';
+      var art=document.getElementById('np-art');
+      art.style.display=src?'':'none';
+      if(src)art.src=src;
+      np.href=t.url||'#';
+      np.hidden=false;
+    }).catch(function(){np.hidden=true});
+  }
+  lastfm();
+  setInterval(lastfm,20000);
+
+  /* Favorite artists + genres: both come from your Last.fm top artists. The headings and lists stay hidden until the data
+     loads, so nothing flashes on refresh (and they stay hidden if Last.fm can't be reached).
+     Last.fm has no "top genres" for a user, so genres are worked out from the tags on your top artists, weighted by how much you play each one. */
+  var FAV_PERIOD='6month'; /* overall, 12month, 6month, 3month, 1month or 7day */
+  var FAV_LIMIT=10;        /* artists shown */
+  var GENRE_ARTISTS=20;    /* how many top artists are used to work out genres */
+  var GENRE_LIMIT=6;       /* genres shown */
+  var TAG_SKIP=/^(seen live|favou?rites?|female vocalists?|male vocalists?|american|british|canadian|australian|english|usa|uk|all|albums i own|love|sexy|beautiful|legend|awesome|cool|\d{2,4}s?)$/;
+  function lf(method,extra){
+    return 'https://ws.audioscrobbler.com/2.0/?method='+method+'&format=json&api_key='+encodeURIComponent(LASTFM_KEY)+extra;
+  }
+  function show(listId,titleId,items){
+    var ul=document.getElementById(listId),frag=document.createDocumentFragment();
+    items.forEach(function(t){var li=document.createElement('li');li.textContent=t;frag.appendChild(li)});
+    ul.textContent='';ul.appendChild(frag);
+    ul.hidden=false;document.getElementById(titleId).hidden=false;
+  }
+  function genres(list){
+    var names=list.map(function(a){return (a.name||'').toLowerCase()});
+    Promise.all(list.map(function(a){
+      return fetch(lf('artist.gettoptags','&autocorrect=1&artist='+encodeURIComponent(a.name))).then(function(r){return r.json()}).catch(function(){return null});
+    })).then(function(res){
+      var score={};
+      res.forEach(function(r,i){
+        var tags=r&&r.toptags&&r.toptags.tag;
+        if(!Array.isArray(tags))return;
+        var w=Number(list[i].playcount)||1,used=0;
+        tags.forEach(function(t){
+          var n=(t.name||'').toLowerCase().trim();
+          if(!n||used>=5||TAG_SKIP.test(n)||names.indexOf(n)!==-1)return;
+          used++;
+          score[n]=(score[n]||0)+w*(Number(t.count)||0)/100;
+        });
+      });
+      var top=Object.keys(score).sort(function(x,y){return score[y]-score[x]}).slice(0,GENRE_LIMIT);
+      if(top.length)show('fav-genres','genre-title',top);
+    });
+  }
+  function favArtists(){
+    if(LASTFM_KEY.indexOf('YOUR_')===0)return;
+    fetch(lf('user.gettopartists','&period='+FAV_PERIOD+'&limit='+GENRE_ARTISTS+'&user='+encodeURIComponent(LASTFM_USER))).then(function(r){return r.json()}).then(function(j){
+      var list=j.topartists&&j.topartists.artist;
+      if(!Array.isArray(list)||!list.length)return;
+      show('fav-artists','fav-title',list.slice(0,FAV_LIMIT).map(function(a){return (a.name||'').toLowerCase()}));
+      genres(list);
+    }).catch(function(){});
+  }
+  favArtists();
+})();
+</script>
+</body>
+</html>
