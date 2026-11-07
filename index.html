@@ -4,11 +4,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>ryan's site</title>
-  <script>
-  if (window.location.hostname === "v1.ry4n.space") {
-    window.location.replace("https://ry4n.space/v1");
-  }
-</script>
 <style>
 :root{
   --fg:#eef1e8; --muted:#b9c1ad; --line:#5e6857; --soft:#394033;
@@ -112,10 +107,20 @@ th[scope=row]{white-space:nowrap;width:1%}
 
 @media(max-width:860px){
   .page{grid-template-columns:1fr;gap:24px}
-  .avatar-wrap{max-width:260px}
-  .avatar-badge{left:auto;right:0;flex-direction:row-reverse}
-  .avatar-badge:hover .b-text,.avatar-badge:focus .b-text{max-width:210px;white-space:normal;padding:4px 4px 4px 14px}
-  .avatar-badge:hover,.avatar-badge:focus{min-height:40px;height:auto}
+  /* phone layout: compact profile header like GitHub's mobile profile (small picture, name beside it, details underneath) */
+  .side{display:grid;grid-template-columns:72px minmax(0,1fr);column-gap:16px;align-items:center}
+  .avatar-wrap{width:72px;max-width:none}
+  .names{padding:0;min-width:0}
+  .side h1{font-size:26px;overflow-wrap:anywhere}
+  .username{font-size:18px;overflow-wrap:anywhere}
+  .side .bio,.side .vcard,.side .np{grid-column:1/-1}
+  .side .bio{margin-top:20px}
+  .avatar-badge{left:calc(100% - 22px);top:calc(100% - 26px);bottom:auto;width:max-content;max-width:calc(100vw - 72px);height:28px;min-width:28px;border-radius:14px}
+  .b-icon{width:26px;height:26px;font-size:14px}
+  .b-icon .emoji{width:16px;height:16px}
+  .dot.big{width:11px;height:11px}
+  .avatar-badge:hover .b-text,.avatar-badge:focus .b-text{max-width:min(280px,calc(100vw - 112px));white-space:normal;padding:4px 12px 4px 2px;font-size:13px;line-height:18px}
+  .avatar-badge:hover,.avatar-badge:focus{height:auto;min-height:28px}
 }
 @media(max-width:700px){
   .md{padding:20px 16px 28px}
