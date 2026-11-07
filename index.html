@@ -107,20 +107,22 @@ th[scope=row]{white-space:nowrap;width:1%}
 
 @media(max-width:860px){
   .page{grid-template-columns:1fr;gap:24px}
-  /* phone layout: compact profile header like GitHub's mobile profile (small picture, name beside it, details underneath) */
-  .side{display:grid;grid-template-columns:72px minmax(0,1fr);column-gap:16px;align-items:center}
-  .avatar-wrap{width:72px;max-width:none}
-  .names{padding:0;min-width:0}
+  /* phone layout: compact profile header like GitHub's mobile profile (picture, name beside it, status row, then details) */
+  .side{display:grid;grid-template-columns:96px minmax(0,1fr);column-gap:16px;align-items:center}
+  .avatar-wrap{display:contents} /* lets the picture and the status row be placed directly in the grid */
+  .avatar{grid-column:1;grid-row:1/span 2;width:96px;align-self:center}
+  .names{grid-column:2;grid-row:1;align-self:end;padding:0;min-width:0}
   .side h1{font-size:26px;overflow-wrap:anywhere}
   .username{font-size:18px;overflow-wrap:anywhere}
+  /* status: always visible, no tapping, sits under the username and pronouns */
+  .avatar-badge{grid-column:2;grid-row:2;align-self:start;position:static;justify-self:start;max-width:100%;height:auto;min-height:32px;margin-top:8px;border-radius:16px;cursor:default;transition:none}
+  .avatar-badge:hover,.avatar-badge:focus{box-shadow:none;height:auto}
+  .b-icon{width:30px;height:30px;font-size:16px}
+  .b-icon .emoji{width:18px;height:18px}
+  .dot.big{width:12px;height:12px}
+  .b-text,.avatar-badge:hover .b-text,.avatar-badge:focus .b-text{max-width:none;opacity:1;white-space:normal;padding:4px 14px 4px 2px;font-size:14px;line-height:20px;transition:none}
   .side .bio,.side .vcard,.side .np{grid-column:1/-1}
   .side .bio{margin-top:20px}
-  .avatar-badge{left:calc(100% - 22px);top:calc(100% - 26px);bottom:auto;width:max-content;max-width:calc(100vw - 72px);height:28px;min-width:28px;border-radius:14px}
-  .b-icon{width:26px;height:26px;font-size:14px}
-  .b-icon .emoji{width:16px;height:16px}
-  .dot.big{width:11px;height:11px}
-  .avatar-badge:hover .b-text,.avatar-badge:focus .b-text{max-width:min(280px,calc(100vw - 112px));white-space:normal;padding:4px 12px 4px 2px;font-size:13px;line-height:18px}
-  .avatar-badge:hover,.avatar-badge:focus{height:auto;min-height:28px}
 }
 @media(max-width:700px){
   .md{padding:20px 16px 28px}
@@ -138,7 +140,7 @@ th[scope=row]{white-space:nowrap;width:1%}
       <!-- Shows your Discord profile picture (via Lanyard). The silhouette is the fallback if it can't load. -->
       <img id="avatar-img" alt="Profile picture" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23dafbe1'/%3E%3Ccircle cx='50' cy='38' r='17' fill='%231a7f37'/%3E%3Cpath d='M16 92c4-26 20-34 34-34s30 8 34 34Z' fill='%231a7f37'/%3E%3C/svg%3E">
     </div>
-    <span class="avatar-badge" id="avatar-badge" tabindex="0"><span class="b-icon"><img id="badge-img" class="emoji" alt="" hidden><span id="badge-uni" hidden></span><span class="dot big offline" id="badge-dot"></span></span><span class="b-text" id="badge-text">offline</span></span>
+    <span class="avatar-badge" id="avatar-badge"><span class="b-icon"><img id="badge-img" class="emoji" alt="" hidden><span id="badge-uni" hidden></span><span class="dot big offline" id="badge-dot"></span></span><span class="b-text" id="badge-text">offline</span></span>
   </div>
 
   <div class="names">
