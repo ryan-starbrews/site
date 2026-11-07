@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -54,6 +54,8 @@ a:focus-visible{outline:2px solid var(--green-2);outline-offset:2px;border-radiu
 .vinyl-grid img{width:100%;height:100%;object-fit:cover;display:block}
 .vinyl-grid .disc{width:62%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,var(--hover-accent) 0 12%,var(--bg) 13% 100%);border:1px solid var(--line)}
 .vinyl-grid .t{font:600 .8rem/1.3 var(--sans);text-transform:lowercase;overflow-wrap:anywhere}
+.vinyl-grid .vs{display:flex;flex-wrap:wrap;justify-content:center;gap:4px;margin-top:2px}
+.vinyl-grid .v{padding:1px 9px;border:1px solid var(--line);border-radius:8px;background:var(--soft);font:600 .7rem/1.5 var(--sans);text-transform:lowercase;color:var(--fg)}
 .vinyl-grid .a{font:.75rem/1.3 var(--sans);color:var(--muted);text-transform:lowercase;overflow-wrap:anywhere;margin-top:-4px}
 @media(max-width:860px){.vinyl-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:480px){.vinyl-grid{grid-template-columns:repeat(2,1fr)}}
@@ -471,35 +473,35 @@ th[scope=row]{white-space:nowrap;width:1%}
   }
   favTracks();
   /* Vinyl collection: add one line per record, {t:'album',a:'artist'}. Cover art is looked up automatically
-     from Apple's iTunes search. If you'd rather use your own photo, add img:'https://...' to that line. */
+     from Apple's iTunes search. Add v:['color','2lp','alt cover'] to a line to show tags under the artist name, in that order. If you'd rather use your own photo, add img:'https://...' to that line. */
   var VINYLS=[
-    {t:"Prima",a:"ADÉLA"},
-    {t:"This Is How Tomorrow Moves",a:"Beabadoobee"},
-    {t:"Happier Than Ever",a:"Billie Eilish"},
-    {t:"Hit Me Hard And Soft",a:"Billie Eilish"},
-    {t:"Locket",a:"Madison Beer"},
-    {t:"Do That Again",a:"Malcolm Todd"},
-    {t:"Cloud 9",a:"Megan Moroney"},
-    {t:"Hades",a:"Melanie Martinez"},
-    {t:"The Art Of Loving",a:"Olivia Dean"},
-    {t:"Sour",a:"Olivia Rodrigo"},
-    {t:"Guts",a:"Olivia Rodrigo"},
-    {t:"Drop Dead",a:"Olivia Rodrigo"},
-    {t:"Stupid Song",a:"Olivia Rodrigo"},
-    {t:"The Cure",a:"Olivia Rodrigo"},
-    {t:"You Seem Pretty Sad For A Girl So In Love",a:"Olivia Rodrigo"},
-    {t:"Kansas Anymore (The Longest Goodbye)",a:"ROLE MODEL"},
-    {t:"Chuck Timely & The Hourglass",a:"ROLE MODEL"},
-    {t:"Emails I Can't Send",a:"Sabrina Carpenter"},
-    {t:"Short N' Sweet",a:"Sabrina Carpenter"},
-    {t:"Man's Best Friend",a:"Sabrina Carpenter"},
-    {t:"Visitor",a:"Sienna Spiro"},
-    {t:"Ctrl",a:"SZA"},
-    {t:"SOS",a:"SZA"},
-    {t:"Think Later",a:"Tate McRae"},
-    {t:"So Close To What",a:"Tate McRae"},
-    {t:"So Close To What???",a:"Tate McRae"},
-    {t:"Stranger Things: The WSQK Collection",a:"various artists"}
+    {t:"Prima",a:"ADÉLA",v:["berry purple", "alt cover"]},
+    {t:"This Is How Tomorrow Moves",a:"Beabadoobee",v:["stereo red"]},
+    {t:"Happier Than Ever",a:"Billie Eilish",v:["pale blue", "2lp"]},
+    {t:"Hit Me Hard And Soft",a:"Billie Eilish",v:["blue & orange splatter", "anniversary edition"]},
+    {t:"Locket",a:"Madison Beer",v:["buttercream", "alt cover"]},
+    {t:"Do That Again",a:"Malcolm Todd",v:["red & black splish"]},
+    {t:"Cloud 9",a:"Megan Moroney",v:["stereo candy cloud pink", "2lp"]},
+    {t:"Hades",a:"Melanie Martinez",v:["synthetic rose", "2lp"]},
+    {t:"The Art Of Loving",a:"Olivia Dean",v:["black"]},
+    {t:"Sour",a:"Olivia Rodrigo",v:["blue transparent", "alt cover"]},
+    {t:"Guts",a:"Olivia Rodrigo",v:["magenta", "alt cover"]},
+    {t:"Drop Dead",a:"Olivia Rodrigo",v:["chewing gum pink", "7\""]},
+    {t:"Stupid Song",a:"Olivia Rodrigo",v:["hand on my heart", "7\""]},
+    {t:"The Cure",a:"Olivia Rodrigo",v:["red", "7\""]},
+    {t:"You Seem Pretty Sad For A Girl So In Love",a:"Olivia Rodrigo",v:["pretty sad pink", "alt cover"]},
+    {t:"Kansas Anymore (The Longest Goodbye)",a:"ROLE MODEL",v:["canary yellow", "2lp", "reissue"]},
+    {t:"Chuck Timely & The Hourglass",a:"ROLE MODEL",v:["translucent clearwater blue"]},
+    {t:"Emails I Can't Send",a:"Sabrina Carpenter",v:["bone"]},
+    {t:"Short N' Sweet",a:"Sabrina Carpenter",v:["blue marbled"]},
+    {t:"Man's Best Friend",a:"Sabrina Carpenter",v:["light blue"]},
+    {t:"Visitor",a:"Sienna Spiro",v:["brunette", "alt cover"]},
+    {t:"Ctrl",a:"SZA",v:["green translucent", "2lp"]},
+    {t:"SOS",a:"SZA",v:["black", "2lp"]},
+    {t:"Think Later",a:"Tate McRae",v:["black"]},
+    {t:"So Close To What",a:"Tate McRae",v:["dreamsicle"]},
+    {t:"So Close To What???",a:"Tate McRae",v:["crystal clear", "2lp"]},
+    {t:"Stranger Things: The WSQK Collection",a:"various artists",v:["red"]}
   ];
   function vinylInit(){
     if(!VINYLS.length)return;
@@ -508,7 +510,12 @@ th[scope=row]{white-space:nowrap;width:1%}
       var li=document.createElement('li'),cov=document.createElement('div'),t=document.createElement('div'),a=document.createElement('div');
       cov.className='cover';cov.innerHTML='<div class="disc"></div>';
       t.className='t';t.textContent=v.t;a.className='a';a.textContent=v.a;
-      li.appendChild(cov);li.appendChild(t);li.appendChild(a);ul.appendChild(li);
+      li.appendChild(cov);li.appendChild(t);li.appendChild(a);
+      var tg=[].concat(v.v||[]);
+      if(tg.length){var vs=document.createElement('div');vs.className='vs';
+        tg.forEach(function(x){var pill=document.createElement('span');pill.className='v';pill.textContent=x;vs.appendChild(pill)});
+        li.appendChild(vs)}
+      ul.appendChild(li);
       function put(src){
         var im=new Image();im.alt=v.t+' by '+v.a;
         im.onload=function(){cov.textContent='';cov.appendChild(im)};
