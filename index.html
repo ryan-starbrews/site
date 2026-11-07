@@ -84,6 +84,8 @@ a:focus-visible{outline:2px solid var(--green-2);outline-offset:2px;border-radiu
 .np small{display:block;font:600 .75rem var(--sans);color:var(--green)}
 .np b,.np i{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .np b{font-weight:600}
+.np .bar{display:block;height:4px;margin-top:7px;border-radius:2px;background:var(--green-bg);overflow:hidden}
+.np .bar>span{display:block;height:100%;width:0;background:var(--green);border-radius:2px;transition:width 1s linear}
 .np i{font-style:normal;font-size:.875rem;color:var(--muted)}
 
 /* ---------- tables ---------- */
@@ -170,7 +172,7 @@ th[scope=row]{white-space:nowrap;width:1%}
 
   <a class="np" id="tv" href="#" target="_blank" rel="noopener" hidden>
           <img id="tv-art" class="poster" alt="" style="display:none" onerror="this.style.display='none'">
-          <span class="txt"><small id="tv-label">watching</small><b id="tv-title"></b><i id="tv-sub"></i></span>
+          <span class="txt"><small id="tv-label">watching</small><b id="tv-title"></b><i id="tv-sub"></i><span class="bar" id="tv-bar" hidden><span id="tv-fill"></span></span></span>
         </a>
 </aside>
 </div>
@@ -314,6 +316,14 @@ th[scope=row]{white-space:nowrap;width:1%}
   var TRAKT_KEY='srm5cKymjlLTi4-Ddq7cVZWQmWN7UU8wqdDk7joP3Aw';
   var TMDB_KEY='e5ba0d02cee97c9f27c426a38e2a8317';
   var tv=document.getElementById('tv'),tvArt=document.getElementById('tv-art'),artFor='',lastLive=null;try{lastLive=JSON.parse(localStorage.getItem('tvLast')||'null')}catch(e){}
+  /* Progress bar: estimated from Trakt's start and end times for what you're playing right now (only shown while it's live) */
+  var tvTimes=null,bar=document.getElementById('tv-bar'),fill=document.getElementById('tv-fill');
+  function barTick(){
+    if(!tvTimes||isNaN(tvTimes[0])||isNaN(tvTimes[1])||tvTimes[1]<=tvTimes[0]){bar.hidden=true;return}
+    var p=Math.max(0,Math.min(1,(Date.now()-tvTimes[0])/(tvTimes[1]-tvTimes[0])));
+    bar.hidden=false;fill.style.width=(p*100)+'%';
+  }
+  setInterval(barTick,1000);
   function tvRender(r){
     if(!r){tv.hidden=true;return}
     var it=r.item,show=it.show,movie=it.movie,ep=it.episode,base=show||movie;
@@ -324,6 +334,8 @@ th[scope=row]{white-space:nowrap;width:1%}
     var slug=base.ids&&base.ids.slug;
     tv.href=slug?'https://trakt.tv/'+(show?'shows/':'movies/')+slug:'https://trakt.tv/users/'+encodeURIComponent(TRAKT_USER);
     tv.hidden=false;
+    tvTimes=(r.live&&it.started_at&&it.expires_at)?[Date.parse(it.started_at),Date.parse(it.expires_at)]:null;
+    barTick();
     var tmdb=base.ids&&base.ids.tmdb,key=(show?'tv':'movie')+tmdb;
     if(TMDB_KEY&&tmdb&&key!==artFor){
       artFor=key;
