@@ -51,7 +51,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 
 
 .tags{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
-#fav-title[hidden],#fav-artists[hidden]{display:none}
+#fav-title[hidden],#fav-artists[hidden],#genre-title[hidden],#fav-genres[hidden]{display:none}
 .tags li{font-family:var(--mono);font-size:.82rem;padding:7px 14px;border-radius:999px;background:rgba(27,121,107,.35);border:1px solid var(--accent)}
 .tags li.hl{background:var(--accent);border-color:var(--accent-hi);color:#fff}
 .tags li a{color:inherit;text-decoration:underline;text-underline-offset:3px}
@@ -154,7 +154,6 @@ html{scroll-behavior:smooth}
   <nav aria-label="Sections">
     <a href="#likes" aria-current="true">likes &amp; dislikes</a>
     <a href="#lovezone">lovezone</a>
-    <a href="#interests">interests</a>
     <a href="#other">before you interact</a>
     <a href="#links">links</a>
   </nav>
@@ -183,16 +182,8 @@ html{scroll-behavior:smooth}
     <ul class="tags"><li class="hl">freddie</li><li>nia</li><li>soda</li><li>bree</li><li>eva</li><li>ry</li><li>samuel</li><li>leia</li><li>scar</li><li>reese</li><li>aqua</li><li>derphinie</li><li>vincent</li><li>nico</li><li>fern</li><li>kenzie</li><li>jessie</li><li>thalia</li></ul>
     <h3 id="fav-title" hidden>favorite artists</h3>
     <ul class="tags" id="fav-artists" hidden></ul>
-  </section>
-
-  <section class="panel" id="interests">
-    <h2>interests</h2>
-    <h3>music</h3>
-    <ul class="tags"><li>pop</li><li>r&amp;b</li><li>indie pop</li><li>alt pop</li><li>singer-songwriters</li><li>country pop</li><li>girl groups</li><li>dance pop</li><li>pop rock</li><li>neo-soul</li><li>folk pop</li><li>bedroom pop</li><li>sad girl pop</li></ul>
-    <h3>games</h3>
-    <ul class="tags"><li>stardew valley</li><li>animal crossing</li><li>cozy puzzles</li></ul>
-    <h3>other things i like</h3>
-    <ul class="tags"><li>houseplants</li><li>journaling</li><li>baking</li><li>long walks</li></ul>
+    <h3 id="genre-title" hidden>favorite genres</h3>
+    <ul class="tags" id="fav-genres" hidden></ul>
   </section>
 
   <section class="panel" id="other">
@@ -313,24 +304,51 @@ html{scroll-behavior:smooth}
   }
   window.addEventListener('resize',placeNp);window.addEventListener('load',placeNp);placeNp();
 
-  /* Favorite artists: pulled from your Last.fm top artists. The heading and list stay hidden until the data loads,
-     so nothing flashes on refresh (and the section stays hidden if Last.fm can't be reached). */
+  /* Favorite artists + genres: both come from your Last.fm top artists. The headings and lists stay hidden until the data
+     loads, so nothing flashes on refresh (and they stay hidden if Last.fm can't be reached).
+     Last.fm has no "top genres" for a user, so genres are worked out from the tags on your top artists, weighted by how much you play each one. */
   var FAV_PERIOD='6month'; /* overall, 12month, 6month, 3month, 1month or 7day */
-  var FAV_LIMIT=10;
+  var FAV_LIMIT=10;        /* artists shown */
+  var GENRE_ARTISTS=20;    /* how many top artists are used to work out genres */
+  var GENRE_LIMIT=10;      /* genres shown */
+  var TAG_SKIP=/^(seen live|favou?rites?|female vocalists?|male vocalists?|american|british|canadian|australian|english|usa|uk|all|albums i own|love|sexy|beautiful|legend|awesome|cool|\d{2,4}s?)$/;
+  function lf(method,extra){
+    return 'https://ws.audioscrobbler.com/2.0/?method='+method+'&format=json&api_key='+encodeURIComponent(LASTFM_KEY)+extra;
+  }
+  function show(listId,titleId,items){
+    var ul=document.getElementById(listId),frag=document.createDocumentFragment();
+    items.forEach(function(t){var li=document.createElement('li');li.textContent=t;frag.appendChild(li)});
+    ul.textContent='';ul.appendChild(frag);
+    ul.hidden=false;document.getElementById(titleId).hidden=false;
+  }
+  function genres(list){
+    var names=list.map(function(a){return (a.name||'').toLowerCase()});
+    Promise.all(list.map(function(a){
+      return fetch(lf('artist.gettoptags','&autocorrect=1&artist='+encodeURIComponent(a.name))).then(function(r){return r.json()}).catch(function(){return null});
+    })).then(function(res){
+      var score={};
+      res.forEach(function(r,i){
+        var tags=r&&r.toptags&&r.toptags.tag;
+        if(!Array.isArray(tags))return;
+        var w=Number(list[i].playcount)||1,used=0;
+        tags.forEach(function(t){
+          var n=(t.name||'').toLowerCase().trim();
+          if(!n||used>=5||TAG_SKIP.test(n)||names.indexOf(n)!==-1)return;
+          used++;
+          score[n]=(score[n]||0)+w*(Number(t.count)||0)/100;
+        });
+      });
+      var top=Object.keys(score).sort(function(x,y){return score[y]-score[x]}).slice(0,GENRE_LIMIT);
+      if(top.length)show('fav-genres','genre-title',top);
+    });
+  }
   function favArtists(){
     if(LASTFM_KEY.indexOf('YOUR_')===0)return;
-    var url='https://ws.audioscrobbler.com/2.0/?method=user.gettopartists&format=json&period='+FAV_PERIOD+'&limit='+FAV_LIMIT+'&user='+encodeURIComponent(LASTFM_USER)+'&api_key='+encodeURIComponent(LASTFM_KEY);
-    fetch(url).then(function(r){return r.json()}).then(function(j){
+    fetch(lf('user.gettopartists','&period='+FAV_PERIOD+'&limit='+GENRE_ARTISTS+'&user='+encodeURIComponent(LASTFM_USER))).then(function(r){return r.json()}).then(function(j){
       var list=j.topartists&&j.topartists.artist;
       if(!Array.isArray(list)||!list.length)return;
-      var ul=document.getElementById('fav-artists'),frag=document.createDocumentFragment();
-      list.forEach(function(a){
-        var li=document.createElement('li');
-        li.textContent=(a.name||'').toLowerCase();
-        frag.appendChild(li);
-      });
-      ul.textContent='';ul.appendChild(frag);
-      ul.hidden=false;document.getElementById('fav-title').hidden=false;
+      show('fav-artists','fav-title',list.slice(0,FAV_LIMIT).map(function(a){return (a.name||'').toLowerCase()}));
+      genres(list);
     }).catch(function(){});
   }
   favArtists();
