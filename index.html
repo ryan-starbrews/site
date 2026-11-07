@@ -47,7 +47,7 @@ a:focus-visible{outline:2px solid var(--green-2);outline-offset:2px;border-radiu
 .avatar-wrap{position:relative}
 .avatar{width:100%;aspect-ratio:1;border-radius:50%;border:1px solid var(--line);overflow:hidden;background:var(--green-bg)}
 .avatar img{width:100%;height:100%;object-fit:cover;display:block}
-.avatar-badge{position:absolute;left:calc(100% - 40px);bottom:30px;z-index:5;display:flex;align-items:center;height:40px;min-width:40px;border-radius:20px;background:var(--bg);border:1px solid var(--line);color:var(--fg);outline:none;cursor:default;transition:box-shadow .2s}
+.avatar-badge{position:absolute;left:calc(100% - 40px);bottom:30px;z-index:5;display:flex;align-items:center;height:40px;min-width:40px;border-radius:20px;background:var(--bg);border:1px solid var(--line);color:var(--fg);outline:none;cursor:pointer;text-decoration:none;transition:box-shadow .2s}
 .avatar-badge:hover,.avatar-badge:focus{box-shadow:0 8px 24px var(--shadow)}
 .avatar-badge:focus-visible{outline:2px solid var(--green-2);outline-offset:2px}
 .b-icon{width:38px;height:38px;flex:none;display:flex;align-items:center;justify-content:center;font-size:18px;line-height:1}
@@ -115,7 +115,7 @@ th[scope=row]{white-space:nowrap;width:1%}
   .side h1{font-size:26px;overflow-wrap:anywhere}
   .username{font-size:18px;overflow-wrap:anywhere}
   /* status: always visible, no tapping, sits under the username and pronouns */
-  .avatar-badge{grid-column:2;grid-row:2;align-self:start;position:static;justify-self:start;max-width:100%;height:auto;min-height:32px;margin-top:8px;border-radius:16px;cursor:default;transition:none}
+  .avatar-badge{grid-column:2;grid-row:2;align-self:start;position:static;justify-self:start;max-width:100%;height:auto;min-height:32px;margin-top:8px;border-radius:16px;cursor:pointer;transition:none}
   .avatar-badge:hover,.avatar-badge:focus{box-shadow:none;height:auto}
   .b-icon{width:30px;height:30px;font-size:16px}
   .b-icon .emoji{width:18px;height:18px}
@@ -140,7 +140,7 @@ th[scope=row]{white-space:nowrap;width:1%}
       <!-- Shows your Discord profile picture (via Lanyard). The silhouette is the fallback if it can't load. -->
       <img id="avatar-img" alt="Profile picture" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23dafbe1'/%3E%3Ccircle cx='50' cy='38' r='17' fill='%231a7f37'/%3E%3Cpath d='M16 92c4-26 20-34 34-34s30 8 34 34Z' fill='%231a7f37'/%3E%3C/svg%3E">
     </div>
-    <span class="avatar-badge" id="avatar-badge"><span class="b-icon"><img id="badge-img" class="emoji" alt="" hidden><span id="badge-uni" hidden></span><span class="dot big offline" id="badge-dot"></span></span><span class="b-text" id="badge-text">offline</span></span>
+    <a class="avatar-badge" id="avatar-badge" href="https://discord.com/users/701517787776024647" target="_blank" rel="noopener"><span class="b-icon"><img id="badge-img" class="emoji" alt="" hidden><span id="badge-uni" hidden></span><span class="dot big offline" id="badge-dot"></span></span><span class="b-text" id="badge-text">offline</span></a>
   </div>
 
   <div class="names">
