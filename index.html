@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -8,10 +8,10 @@
 <style>
 :root{
   --fg:#eef1e8; --muted:#b9c1ad; --line:#5e6857; --soft:#394033;
-  --green:#a7d98f; --green-2:#a7d98f; --green-bg:rgba(167,217,143,.16); --green-line:rgba(167,217,143,.42); --green-ink:#d2f0c3;
+  --green:#616d58; --green-2:#eef1e8; --green-bg:#394033; --green-line:#5e6857; --green-ink:#eef1e8;
   --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif;
   --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
-  --bg:#42493d; --hover-accent:#616d58; --on-hover:#eef1e8; --offline:#8c959f; --hover:#4d5646; --on-green:#1d2a16; --shadow:rgba(18,22,15,.6);
+  --bg:#42493d; --hover-accent:#616d58; --on-hover:#eef1e8; --offline:#8c959f; --hover:#4d5646; --on-green:#eef1e8; --shadow:rgba(18,22,15,.6);
   color-scheme:dark;
 }
 *,*::before,*::after{box-sizing:border-box}
@@ -43,7 +43,11 @@ a:focus-visible{outline:2px solid var(--green-2);outline-offset:2px;border-radiu
 .md h1,.md h2{font-weight:600;line-height:1.25;padding-bottom:.3em;border-bottom:1px solid var(--line)}
 .md h1{font-size:2em;margin:0 0 20px}
 .md h2{font-size:1.5em;margin:32px 0 16px;position:relative}
-#before-you-interact,#favorites,#vinyl,#likes{margin-top:60px}
+#before-you-interact,#favorites,#likes{margin-top:60px}
+.bio a{color:inherit;text-decoration:underline;text-decoration-color:var(--hover-accent);text-decoration-thickness:2px;text-underline-offset:3px}
+.bio a:hover{text-decoration-color:var(--fg)}
+.tags.btns li a{color:inherit;text-decoration:none}
+.tags.btns li a:hover{text-decoration:underline}
 .vinyl-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:0 0 16px;padding:0!important;list-style:none}
 .vinyl-grid li{margin:0!important;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;padding:10px 10px 12px;border:1px solid var(--line);border-radius:6px;background:var(--bg);min-width:0}
 .vinyl-grid .cover{width:100%;aspect-ratio:1;border-radius:4px;overflow:hidden;background:var(--soft);display:flex;align-items:center;justify-content:center}
@@ -55,8 +59,8 @@ a:focus-visible{outline:2px solid var(--green-2);outline-offset:2px;border-radiu
 @media(max-width:480px){.vinyl-grid{grid-template-columns:repeat(2,1fr)}}
 .md h3{font-size:1.25em;font-weight:600;line-height:1.25;margin:24px 0 12px}
 .md p{margin:0 0 16px}
-.md a{color:var(--green);text-decoration:none}
-.md a:hover{text-decoration:underline}
+.md a{color:var(--fg);text-decoration:underline;text-decoration-color:var(--hover-accent);text-decoration-thickness:2px;text-underline-offset:3px}
+.md a:hover{text-decoration-color:var(--fg)}
 .md ul{padding-left:2em;margin:0 0 16px}
 .md li+li{margin-top:.25em}
 .md ul.plain{list-style:none;padding:0}
@@ -78,7 +82,7 @@ a:focus-visible{outline:2px solid var(--green-2);outline-offset:2px;border-radiu
 .b-text{max-width:0;opacity:0;padding:0;overflow:hidden;white-space:nowrap;font-size:14px;font-weight:500;line-height:20px;transition:max-width .22s ease,opacity .15s ease,padding .22s ease}
 .avatar-badge:hover .b-text,.avatar-badge:focus .b-text{max-width:min(520px,calc(100vw - 300px));opacity:1;padding:0 16px 0 4px}
 @media(prefers-reduced-motion:reduce){.avatar-badge,.b-text{transition:none}}
-.dot{--c:var(--green-2);width:8px;height:8px;flex:none;border-radius:50%;background:var(--c)}
+.dot{--c:var(--hover-accent);width:8px;height:8px;flex:none;border-radius:50%;background:var(--c)}
 .dot.big{width:14px;height:14px}
 .dot.idle{--c:#bf8700}.dot.dnd{--c:#cf222e}.dot.offline{--c:var(--offline)}
 .names{padding:16px 0 0}
@@ -135,7 +139,7 @@ th[scope=row]{white-space:nowrap;width:1%}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:0 32px}
 .two h3{margin-top:0}
 .alert{margin:0 0 16px;padding:0 1em;border-left:.25em solid var(--green-2)}
-.alert-title{margin:0 0 4px!important;font-weight:600;color:var(--green)}
+.alert-title{margin:0 0 4px!important;font-weight:600;color:var(--fg)}
 .alert p:last-child{margin-bottom:0}
 
 @media(max-width:860px){
@@ -171,7 +175,7 @@ th[scope=row]{white-space:nowrap;width:1%}
   <div class="avatar-wrap">
     <div class="avatar">
       <!-- Shows your Discord profile picture (via Lanyard). The silhouette is the fallback if it can't load. -->
-      <img id="avatar-img" alt="Profile picture" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23dafbe1'/%3E%3Ccircle cx='50' cy='38' r='17' fill='%231a7f37'/%3E%3Cpath d='M16 92c4-26 20-34 34-34s30 8 34 34Z' fill='%231a7f37'/%3E%3C/svg%3E">
+      <img id="avatar-img" alt="Profile picture" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23394033'/%3E%3Ccircle cx='50' cy='38' r='17' fill='%23616d58'/%3E%3Cpath d='M16 92c4-26 20-34 34-34s30 8 34 34Z' fill='%23616d58'/%3E%3C/svg%3E">
     </div>
     <a class="avatar-badge" id="avatar-badge" href="https://discord.com/users/701517787776024647" target="_blank" rel="noopener"><span class="b-icon"><img id="badge-img" class="emoji" alt="" hidden><span id="badge-uni" hidden></span><span class="dot big offline" id="badge-dot"></span></span><span class="b-text" id="badge-text">offline</span></a>
   </div>
@@ -181,7 +185,7 @@ th[scope=row]{white-space:nowrap;width:1%}
     <p class="username"><a id="discord-name" href="https://discord.com/users/701517787776024647" target="_blank" rel="noopener">@username</a> · he/him</p>
   </div>
 
-  <p class="bio">hi, i’m <b>ryan</b>! i love music, singing, collecting vinyl, and staying up way too late. this is my little rainy corner of the internet, so grab a seat and stay a while.</p>
+  <p class="bio">hi, i’m <b>ryan</b>! i love music, singing, <a class="tab-link" href="#vinyl">collecting vinyl</a>, and staying up way too late. this is my little rainy corner of the internet, so grab a seat and stay a while.</p>
 
   <ul class="vcard">
     <li><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span>december 2</span></li>
@@ -210,6 +214,7 @@ th[scope=row]{white-space:nowrap;width:1%}
     <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M0 1.75A.75.75 0 0 1 .75 1h4.253c1.227 0 2.317.59 3 1.501A3.743 3.743 0 0 1 11.006 1h4.245a.75.75 0 0 1 .75.75v10.5a.75.75 0 0 1-.75.75h-4.507a2.25 2.25 0 0 0-1.591.659l-.622.621a.75.75 0 0 1-1.06 0l-.622-.621A2.25 2.25 0 0 0 5.258 13H.75a.75.75 0 0 1-.75-.75Zm7.251 10.324.004-5.073-.002-2.253A2.25 2.25 0 0 0 5.003 2.5H1.5v9h3.757a3.75 3.75 0 0 1 1.994.574ZM8.755 4.75l-.004 7.322a3.752 3.752 0 0 1 1.992-.572H14.5v-9h-3.495a2.25 2.25 0 0 0-2.25 2.25Z"/></svg>
     <div class="tabs" role="tablist" aria-label="sections">
       <button type="button" role="tab" id="tab-about" aria-selected="true" aria-controls="panel-about">about me</button>
+      <button type="button" role="tab" id="tab-vinyl" aria-selected="false" aria-controls="panel-vinyl" tabindex="-1">vinyl</button>
     </div>
   </div>
   <article class="md">
@@ -225,7 +230,7 @@ th[scope=row]{white-space:nowrap;width:1%}
     <div role="tabpanel" id="panel-about" aria-labelledby="tab-about">
       <h2 id="about"><a class="anchor" href="#about" aria-label="link to this section">#</a>about me</h2>
       <p>hi, i’m <b>ryan</b> (he/him). my boyfriend freddie and my friends are my favorite people, and i love making friends, talking to people, and calling.</p>
-      <p>i’m really into music: singing, collecting vinyl, and listening to my favorite artists and genres (see favorites below). i also like watching stranger things, rain, sleeping in, and staying up late.</p>
+      <p>i’m really into music: singing, <a class="tab-link" href="#vinyl">collecting vinyl</a>, and listening to my favorite artists and genres (see favorites below). i also like watching stranger things, rain, sleeping in, and staying up late.</p>
       <p>i’m on discord a lot, so my dms are always open if you need help with something. the one exception is anything to do with my servers: unless you’re a close friend of mine, please don’t message me about them, and that includes asking me directly for support.</p>
       <p>i’m not a fan of waking up early, slow walkers, shipping prices, coffee, the heat, or trump/ice/etc.</p>
       <p class="fine">this is a summary of the page and may contain similar or repetitive messages.</p>
@@ -248,14 +253,16 @@ th[scope=row]{white-space:nowrap;width:1%}
     <h3 id="genre-title" hidden>favorite genres</h3>
     <ul class="tags btns" id="fav-genres" hidden></ul>
 
-    <h2 id="vinyl" hidden><a class="anchor" href="#vinyl" aria-label="link to this section">#</a>vinyl collection</h2>
-    <ul class="vinyl-grid" id="vinyl-grid" hidden></ul>
-
     <h2 id="likes"><a class="anchor" href="#likes" aria-label="link to this section">#</a>likes &amp; dislikes</h2>
     <h3>likes</h3>
-    <ul class="tags btns"><li>my boyfriend</li><li>music</li><li>singing</li><li>talking to people</li><li>playing minecraft</li><li>collecting vinyl</li><li>making friends</li><li>playing roblox</li><li>calling</li><li>sleeping in</li><li>staying up late</li><li>stranger things</li><li>rain</li></ul>
+    <ul class="tags btns"><li>my boyfriend</li><li>music</li><li>singing</li><li>talking to people</li><li>playing minecraft</li><li><a class="tab-link" href="#vinyl">collecting vinyl</a></li><li>making friends</li><li>playing roblox</li><li>calling</li><li>sleeping in</li><li>staying up late</li><li>stranger things</li><li>rain</li></ul>
     <h3>dislikes</h3>
     <ul class="tags btns"><li>waking up early</li><li>slow walkers</li><li>shipping prices</li><li>people that are blocked</li><li>coffee</li><li>the heat</li><li>trump/ice/etc.</li></ul>
+    </div>
+
+    <div role="tabpanel" id="panel-vinyl" aria-labelledby="tab-vinyl" hidden>
+    <h2 id="vinyl"><a class="anchor" href="#vinyl" aria-label="link to this section">#</a>vinyl collection</h2>
+    <ul class="vinyl-grid" id="vinyl-grid"></ul>
     </div>
   </article>
 </div>
@@ -466,7 +473,33 @@ th[scope=row]{white-space:nowrap;width:1%}
   /* Vinyl collection: add one line per record, {t:'album',a:'artist'}. Cover art is looked up automatically
      from Apple's iTunes search. If you'd rather use your own photo, add img:'https://...' to that line. */
   var VINYLS=[
-    /* {t:'album name',a:'artist name'}, */
+    {t:"Prima",a:"ADÉLA"},
+    {t:"This Is How Tomorrow Moves",a:"Beabadoobee"},
+    {t:"Happier Than Ever",a:"Billie Eilish"},
+    {t:"Hit Me Hard And Soft",a:"Billie Eilish"},
+    {t:"Locket",a:"Madison Beer"},
+    {t:"Do That Again",a:"Malcolm Todd"},
+    {t:"Cloud 9",a:"Megan Moroney"},
+    {t:"Hades",a:"Melanie Martinez"},
+    {t:"The Art Of Loving",a:"Olivia Dean"},
+    {t:"Sour",a:"Olivia Rodrigo"},
+    {t:"Guts",a:"Olivia Rodrigo"},
+    {t:"Drop Dead",a:"Olivia Rodrigo"},
+    {t:"Stupid Song",a:"Olivia Rodrigo"},
+    {t:"The Cure",a:"Olivia Rodrigo"},
+    {t:"You Seem Pretty Sad For A Girl So In Love",a:"Olivia Rodrigo"},
+    {t:"Kansas Anymore (The Longest Goodbye)",a:"ROLE MODEL"},
+    {t:"Chuck Timely & The Hourglass",a:"ROLE MODEL"},
+    {t:"Emails I Can't Send",a:"Sabrina Carpenter"},
+    {t:"Short N' Sweet",a:"Sabrina Carpenter"},
+    {t:"Man's Best Friend",a:"Sabrina Carpenter"},
+    {t:"Visitor",a:"Sienna Spiro"},
+    {t:"Ctrl",a:"SZA"},
+    {t:"SOS",a:"SZA"},
+    {t:"Think Later",a:"Tate McRae"},
+    {t:"So Close To What",a:"Tate McRae"},
+    {t:"So Close To What???",a:"Tate McRae"},
+    {t:"Stranger Things: The WSQK Collection",a:"various artists"}
   ];
   function vinylInit(){
     if(!VINYLS.length)return;
@@ -482,13 +515,16 @@ th[scope=row]{white-space:nowrap;width:1%}
         im.src=src;
       }
       if(v.img){put(v.img);return}
-      fetch('https://itunes.apple.com/search?media=music&entity=album&limit=1&term='+encodeURIComponent(v.a+' '+v.t))
-        .then(function(r){return r.json()}).then(function(j){
-          var r=j.results&&j.results[0];
-          if(r&&r.artworkUrl100)put(r.artworkUrl100.replace('100x100bb','500x500bb'));
-        }).catch(function(){});
+      function find(entity,next){
+        fetch('https://itunes.apple.com/search?media=music&entity='+entity+'&limit=1&term='+encodeURIComponent(v.a+' '+v.t))
+          .then(function(r){return r.json()}).then(function(j){
+            var r=j.results&&j.results[0];
+            if(r&&r.artworkUrl100)put(r.artworkUrl100.replace('100x100bb','500x500bb'));
+            else if(next)next();
+          }).catch(function(){if(next)next()});
+      }
+      find('album',function(){find('song')});
     });
-    ul.hidden=false;document.getElementById('vinyl').hidden=false;
   }
   vinylInit();
 
@@ -517,6 +553,15 @@ th[scope=row]{white-space:nowrap;width:1%}
     if(panel){var t=document.getElementById(panel.getAttribute('aria-labelledby'));if(t)showTab(t);el.scrollIntoView()}
   }
   window.addEventListener('hashchange',hashTab);hashTab();
+  /* links that point to the vinyl tab: switch tabs even if the address already says #vinyl */
+  [].slice.call(document.querySelectorAll('a.tab-link')).forEach(function(a){
+    a.addEventListener('click',function(e){
+      e.preventDefault();
+      showTab(document.getElementById('tab-vinyl'));
+      if(location.hash!=='#vinyl')history.pushState(null,'','#vinyl');
+      window.scrollTo(0,0);
+    });
+  });
 })();
 </script>
 </body>
